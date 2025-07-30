@@ -26,4 +26,4 @@ RUN mkdir -p data
 EXPOSE $PORT
 
 # Start command
-CMD ["uvicorn", "playground.pedro_playground_medico:playground_app", "--host", "0.0.0.0", "--port", "$PORT"]
+CMD ["python", "playground/pedro_playground_medico.py"]

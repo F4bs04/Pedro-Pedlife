@@ -41,8 +41,9 @@ except ImportError:
 # Caminho para o banco RAG
 DB_PATH = Path(__file__).parent.parent / "data" / "enhanced_rag.db"
 
-# Carrega variáveis de ambiente
-load_dotenv('.env.test')
+# Carrega variáveis de ambiente (Railway ou local)
+load_dotenv('.env.test')  # Para desenvolvimento local
+load_dotenv()  # Para Railway (carrega .env se existir)
 
 # Inicializa sistema de busca aprimorado
 enhanced_search_instance = None
@@ -717,6 +718,9 @@ def main():
         
         print(f"✅ Banco RAG encontrado: {DB_PATH}")
         
+        # Configura porta (Railway ou fallback)
+        port = int(os.getenv('PORT', 7778))  # Usa PORT do Railway ou 7778 como fallback
+        
         # Cria o agente
         pedro_agent = create_pedro_agent()
         print("✅ Agente Pedro criado (versão médica)")
@@ -730,7 +734,7 @@ def main():
         print("✅ Aplicação playground obtida")
         
         print("\n🩺 PEDRO PLAYGROUND - VERSÃO MÉDICA PROFISSIONAL")
-        print("📍 URL: http://localhost:7778")
+        print(f"📍 URL: http://localhost:{port}")
         print("🎯 Público: Médicos pediatras, residentes, emergencistas")
         print("🔬 Recursos: RAG Semântico + PubMed + Protocolos Pedlife")
         print("📚 Dados: 26 Protocolos validados + Literatura científica")
@@ -738,7 +742,7 @@ def main():
         print("=" * 70)
         
         # Serve o playground
-        serve_playground_app(playground_app, host="0.0.0.0", port=7778)
+        serve_playground_app(playground_app, host="0.0.0.0", port=port)
         
     except Exception as e:
         print(f"❌ ERRO ao iniciar playground médico: {e}")
